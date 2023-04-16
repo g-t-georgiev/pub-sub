@@ -39,23 +39,20 @@ const eventBus: PubSub = Pubsub.createInstance();
 // Create instance
 const eventBus = new PubSub();
 
-/**  
- * Creates a subscription  
- * @param {string} eventType Event name  
- * @param {(...args: any[]) => void} Callback function to be executed on emitted event of the matching type  
- * @param {any} thisArg Optional argument to be used as this when involing callback  
- * @returns {{ unsubscribe(): void }} Subscription object with unsubscribe method
- */
-const subscription = eventBus.subscribe(<eventType>, <callback>, <thisArg>);
+// Create a subscription  
+const subscriber = (data) => {
+    console.log(data);
+};
 
-// After subscribing for an event, a subscription object is returned  
+// Upon subscribing an event name is passed as first argument  
+// A callback function or a subscriber that receives any data published with the event of interest
+// Optional third argument to be used as the value of *this* inside the callback
+const subscription = eventBus.subscribe(<even_name: string>, <subscriber: callback>, <thisArg: any>(optional));
+
+// Unsubscribe from an event    
 subscription.unsubscribe();
 
-/**  
- * Publish an event with optional data passed to all subscribers
- * @param {string} eventType Event name  
- * @param {...args?: any[]} Data
- * @returns {void}
- */
-eventBus.publish(<eventType>, <args>);
+// Publish event with a certain event name  
+// Passing data is optional, in which case every subscriber interested will get data parameter as empty array.
+eventBus.publish(<event_name: string>, <data: ...any[]>);
 ```
