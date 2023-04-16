@@ -30,23 +30,28 @@ const eventBus = PubSub.createInstance();
 ## Static methods
 
 ```
-const eventBus: PubSub = Pubsub.createInstance();
+// Creates PubSub instance  
+const eventBusPubSub = Pubsub.createInstance();
 ```
 
 ## Instance methods
 
 ```
-// Create instance
+// Creates PubSub instance
 const eventBus = new PubSub();
 
-// Create a subscription  
+// Create a subscriber.  
+// Takes only parameter representing all the data passed upon event emition.
+// Important to note is that data parameter is always present,  
+// but can be empty array, if no data is emitted with the event.
 const subscriber = (data) => {
     console.log(data);
 };
 
-// Upon subscribing an event name is passed as first argument  
-// A callback function or a subscriber that receives any data published with the event of interest
-// Optional third argument to be used as the value of *this* inside the callback
+// Creates a subscription, containing unsubscribe functionality
+// First argument is name of event. Should be of type string.      
+// Second argument is a subscriber/callback.
+// Optional third argument is used as the value of this inside the callback.
 const subscription = eventBus.subscribe(<even_name: string>, <subscriber: callback>, <thisArg: any>(optional));
 
 // Unsubscribe from an event    
