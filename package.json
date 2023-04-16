@@ -1,0 +1,26 @@
+{
+  "name": "@g.t.georgiev/pubsub",
+  "version": "1.0.0",
+  "description": "PubSub is a small library designed for cross component communication on different hierarchy levels",
+  "main": "PubSub.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/g-t-georgiev/pub-sub.git"
+  },
+  "keywords": [
+    "pubsub",
+    "publish",
+    "subscribe",
+    "event",
+    "emitter"
+  ],
+  "author": "Georgi Toni Georgiev",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/g-t-georgiev/pub-sub/issues"
+  },
+  "homepage": "https://github.com/g-t-georgiev/pub-sub#readme"
+}
