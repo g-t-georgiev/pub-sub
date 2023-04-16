@@ -1,10 +1,11 @@
 {
   "name": "@g.t.georgiev/pubsub",
+  "type": "module",
   "version": "1.0.0",
   "description": "PubSub is a small library designed for cross component communication on different hierarchy levels",
   "main": "PubSub.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node ./test/index.spec.js"
   },
   "repository": {
     "type": "git",
