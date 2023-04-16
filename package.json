@@ -3,8 +3,8 @@
   "type": "module",
   "version": "1.0.1",
   "description": "PubSub is a small library designed for cross component communication on different hierarchy levels",
-  "main": "PubSub.js",
-  "exports": "./Pubsub.js",
+  "main": "./src/PubSub",
+  "exports": "./src/Pubsub",
   "scripts": {
     "test": "node ./test/index.spec.js"
   },
