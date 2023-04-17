@@ -1,28 +1,30 @@
 {
-  "name": "@g.t.georgiev/pubsub",
-  "type": "module",
-  "version": "1.0.6",
-  "description": "PubSub is a small library designed for cross component communication on different hierarchy levels",
-  "main": "./src/PubSub",
-  "exports": "./src/Pubsub",
-  "scripts": {
-    "test": "node --test"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/g-t-georgiev/pubsub.git"
-  },
-  "keywords": [
-    "pubsub",
-    "publish",
-    "subscribe",
-    "event",
-    "emitter"
-  ],
-  "author": "Georgi Toni Georgiev",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/g-t-georgiev/pubsub/issues"
-  },
-  "homepage": "https://github.com/g-t-georgiev/pubsub#readme"
+	"name": "@g.t.georgiev/pubsub",
+	"type": "module",
+	"version": "1.0.7",
+	"description": "PubSub is a small library designed for cross component communication on different hierarchy levels",
+	"main": "./src/PubSub",
+	"exports": {
+		"@g.t.georgiev/pubsub": "./src/Pubsub"
+	},
+	"scripts": {
+		"test": "node --test"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/g-t-georgiev/pubsub.git"
+	},
+	"keywords": [
+		"pubsub",
+		"publish",
+		"subscribe",
+		"event",
+		"emitter"
+	],
+	"author": "Georgi Toni Georgiev",
+	"license": "ISC",
+	"bugs": {
+		"url": "https://github.com/g-t-georgiev/pubsub/issues"
+	},
+	"homepage": "https://github.com/g-t-georgiev/pubsub#readme"
 }
