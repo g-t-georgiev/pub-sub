@@ -13,7 +13,7 @@ export class PubSub {
      * subscribers (callback functions) registered with an id under that event. 
      * @type Subscriptions
      */
-    #subscriptions = {};
+    #subscriptions = new Map();
 
     /**
      * Allows subscribing to an event. Takes an event name, a callback handler 
