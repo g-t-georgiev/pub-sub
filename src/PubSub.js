@@ -1,6 +1,6 @@
 /**
- * @typedef Subscriptions
- * @property {{ [id: symbol]: (...args: any[]) => void }} [eventType]
+ * Each subscription is an event type and sunscribers key-value pair.
+ * @typedef {Map<string, Map<symbol, (...args: any[]) => void>>} Subscriptions
  */
 
 /**
@@ -9,8 +9,8 @@
 export class PubSub {
 
     /**
-     * List of subscriptions where each entry is an event type with
-     * subscribers (callback functions) registered with an id under that event. 
+     * Key-value pair map object where each key is an event type and 
+     * each value is another map object storing the subscribers (callback functions) under "id" symbol keys. 
      * @type Subscriptions
      */
     #subscriptions = new Map();
