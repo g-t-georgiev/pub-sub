@@ -1,6 +1,11 @@
 /**
+ * Each subscriber is an id symbol key and callback (subscriber) value.
+ * @typedef {Map<symbol, (...args: any[]) => void>} Subscribers 
+ */
+
+/**
  * Each subscription is an event type and sunscribers key-value pair.
- * @typedef {Map<string, Map<symbol, (...args: any[]) => void>>} Subscriptions
+ * @typedef {Map<string, Subscribers>} Subscriptions
  */
 
 /**
@@ -16,6 +21,45 @@ export class PubSub {
     #subscriptions = new Map();
 
     /**
+     * Returns all subscribers from a single event subscription.
+     * @param {string} eventType 
+     * @returns Subscribers | undefined
+     */
+    #getSubscribers(eventType) {
+        return this.#subscriptions.get(eventType);
+    }
+
+    /**
+     * Adds new subscription or updates current subscription subscribers.
+     * @param {string} eventType 
+     * @param {symbol} [id] 
+     * @param {(...args: any[]) => void} [subscriber] 
+     */
+    #setSubscriber(eventType, id, subscriber) {
+        // create new event type entry if not present
+        if (!this.#subscriptions.has(eventType)) {
+            this.#subscriptions.set(eventType, new Map());
+        }
+
+        // register subscriber / event handler function
+        this.#subscriptions.set(eventType, this.#getSubscribers(eventType).set(id, subscriber));
+    }
+
+    /**
+     * Removes a subscriber from current event subscriptions and 
+     * if no subscribers are left the whole event subscription entry is removed.
+     * @param {string} eventType 
+     * @param {symbol} id 
+     */
+    #deleteSubscriber(eventType, id) {
+        const deletedSuccessfully = this.#getSubscribers(eventType).delete(id);
+
+        if (deletedSuccessfully && this.#getSubscribers(eventType).size === 0) {
+            this.#subscriptions.delete(eventType);
+        }
+    }
+
+    /**
      * Allows subscribing to an event. Takes an event name, a callback handler 
      * invoked on each event with the specific type is emitted and an optional third argument, 
      * which when presented serves as execution context (this) for the handler callback.
@@ -27,37 +71,55 @@ export class PubSub {
     subscribe(evntType, handler, thisArg) {
         const id = Symbol("id");
 
-        // create new event type entry if not present
-        if (!this.#subscriptions.hasOwnProperty(evntType)) {
-            this.#subscriptions[evntType] = {};
-        }
-
-        // register subscriber / event handler function
-        this.#subscriptions[evntType][id] = thisArg 
-            ? handler.bind(thisArg) 
-            : handler;
+        this.#setSubscriber(evntType, id, thisArg ? handler.bind(thisArg) : handler);
         
         return {
             unsubscribe: () => {
-                delete this.#subscriptions[evntType][id];
-                if (Reflect.ownKeys(this.#subscriptions[evntType]).length === 0) {
-                    delete this.#subscriptions[evntType];
-                }
+                this.#deleteSubscriber(evntType, id);
             }
         }
     }
 
     /**
-     * Emits an event of certain type with arguments to be passed down to the subscribers.
+     * Synchronously emits an event of certain type with arguments to be passed down to the subscribers.
      * @param {string} evntType Event type name
      * @param  {...any} args Arguments list to be passed to subscribers
      * @returns {void}
      */
-    publish(evntType, ...args) {
-        if (!this.#subscriptions[evntType]) return;
+    publishSync(evntType, ...args) {
+        const subscribers = this.#getSubscribers(evntType);
+        if (!subscribers) return;
 
-        Reflect.ownKeys(this.#subscriptions[evntType])
-            .forEach(id => this.#subscriptions[evntType][id](...args), this);
+        for (const subscriber of subscribers.values()) {
+            subscriber(...args);
+        }
+    }
+
+    /**
+     * Asynchronously emits an event of certain type with arguments to be passed down to the subscribers.
+     * @param {string} evntType Event type name
+     * @param  {...any} args Arguments list to be passed to subscribers
+     * @returns {Promise<void>}
+     */
+    async publish(evntType, ...args) {
+        const subscribers = this.#getSubscribers(evntType);
+        if (!subscribers) return;
+
+        const promises = [];
+
+        for (const subscriber of subscribers.values()) {
+            promises.push(
+                new Promise((resolve) => {
+                    let timerId = setTimeout(() => {
+                        subscriber(...args);
+                        resolve();
+                        clearTimeout(timerId);
+                    }, 0);
+                })
+            );
+        }
+
+        await Promise.all(promises);
     }
 
     /**
