@@ -41,7 +41,7 @@ export class PubSub {
             this.#subscriptions.set(eventType, new Map());
         }
 
-        // register subscriber / event handler function
+        // register subscriber 
         this.#subscriptions.set(eventType, this.#getSubscribers(eventType).set(id, subscriber));
     }
 
@@ -81,7 +81,8 @@ export class PubSub {
     }
 
     /**
-     * Synchronously emits an event of certain type with arguments to be passed down to the subscribers.
+     * Synchronously emits an event of certain type with arguments to be passed down to the subscribers. 
+     * If no subscribers are present for a certain event immediately returns.
      * @param {string} evntType Event type name
      * @param  {...any} args Arguments list to be passed to subscribers
      * @returns {void}
@@ -96,7 +97,8 @@ export class PubSub {
     }
 
     /**
-     * Asynchronously emits an event of certain type with arguments to be passed down to the subscribers.
+     * Asynchronously emits an event of certain type with arguments to be passed down to the subscribers. 
+     * If no subscribers are present for a certain event immediately returns.
      * @param {string} evntType Event type name
      * @param  {...any} args Arguments list to be passed to subscribers
      * @returns {Promise<void>}
@@ -105,21 +107,17 @@ export class PubSub {
         const subscribers = this.#getSubscribers(evntType);
         if (!subscribers) return;
 
-        const promises = [];
-
-        for (const subscriber of subscribers.values()) {
-            promises.push(
-                new Promise((resolve) => {
-                    let timerId = setTimeout(() => {
-                        subscriber(...args);
-                        resolve();
-                        clearTimeout(timerId);
-                    }, 0);
+        await Promise.all(
+            Array
+                .from(subscribers.values())
+                .map(subscriber => {
+                    return Promise
+                        .resolve()
+                        .then(() => {
+                            subscriber(...args);
+                        });
                 })
-            );
-        }
-
-        await Promise.all(promises);
+        );
     }
 
     /**
