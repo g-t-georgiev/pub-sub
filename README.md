@@ -59,5 +59,10 @@ subscription.unsubscribe();
 
 // Publish event with a certain event name  
 // Passing data is optional, in which case every subscriber interested will get data parameter as empty array.
-eventBus.publish(<event_name: string>, <data: ...any[]>);
+// The publish method is asynchronous
+eventBus.publish(<event_name: string>, <data?: ...any[]>);
+
+// If you want to notify subscribers synchronously (though not recommended)
+// You can use the publishSync method, which works in the same way as the above
+eventBus.publishSync(<event_name: string>, <data?: ...any[]>)
 ```
